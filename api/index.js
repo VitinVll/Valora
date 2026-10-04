@@ -1,6 +1,7 @@
 // Backend da loja para a Vercel (função serverless Node). Banco: Upstash Redis via REST. Fotos: Vercel Blob.
 const crypto=require('crypto');
-const U=process.env.KV_REST_API_URL||process.env.UPSTASH_REDIS_REST_URL,T=process.env.KV_REST_API_TOKEN||process.env.UPSTASH_REDIS_REST_TOKEN;
+const envf=re=>{const k=Object.keys(process.env).find(k=>re.test(k)&&process.env[k]);return k?process.env[k]:''};
+const U=envf(/(KV_REST_API_URL|UPSTASH_REDIS_REST_URL)$/),T=envf(/(KV_REST_API_TOKEN|UPSTASH_REDIS_REST_TOKEN)$/);
 const SECRET=process.env.SESSION_SECRET||T||'';
 const rd=async a=>{const r=await fetch(U,{method:'POST',headers:{Authorization:'Bearer '+T},body:JSON.stringify(a)});const j=await r.json();if(j.error)throw new Error(j.error);return j.result};
 const kv=async(k,d=null)=>{const v=await rd(['GET','loja:'+k]);return v==null?d:JSON.parse(v)};
